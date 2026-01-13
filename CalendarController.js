@@ -1,4 +1,4 @@
-import { db } from '../../core/Store.js';
+import { db } from './Store.js';
 import { CalendarView } from './CalendarView.js';
 
 export class CalendarController {
