@@ -1,4 +1,4 @@
-import { db } from '../../core/Store.js';
+import { db } from './Store.js';
 import { DashboardView } from './DashboardView.js';
 
 export class DashboardController {
