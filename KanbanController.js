@@ -1,5 +1,5 @@
-import { db } from '../../core/Store.js';
-import { bus } from '../../core/EventBus.js';
+import { db } from './Store.js';
+import { bus } from './EventBus.js';
 import { KanbanView } from './KanbanView.js';
 
 export class KanbanController {
