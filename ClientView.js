@@ -1,4 +1,4 @@
-import { db } from '../../core/Store.js';
+import { db } from './Store.js';
 
 export class ClientView {
     constructor() {
