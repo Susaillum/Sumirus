@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUMIRUS | Enterprise Logistics OS</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link rel="stylesheet" href="./css/main.css">
+    <link rel="stylesheet" href="./css/modules/kanban.css"> 
+    </head>
+<body class="theme-dark">
+
+    <div id="boot-loader">
+        <div class="loader-ring"></div>
+        <div class="loader-text">INICIALIZANDO KERNEL SUMIRUS...</div>
+    </div>
+
+    <div id="notification-container"></div>
+
+    <div id="login-screen" class="login-overlay" style="display:none;">
+        <div class="login-box">
+            <h2 style="color:#fff; margin-bottom:10px; font-family:'Rajdhani', sans-serif;">SUMIRUS OS</h2>
+            <p style="color:#888; font-size:0.8rem; margin-bottom:20px;">ACESSO RESTRITO</p>
+            <input type="text" id="login-input" class="login-input" placeholder="ID de Operador">
+            <button id="btn-login-action" class="btn-neon" style="width:100%;">ACESSAR SISTEMA</button>
+        </div>
+    </div>
+
+    <div id="app-interface" style="display: none;">
+        
+        <aside class="sidebar">
+            <div class="brand">
+                <i class="fa-solid fa-cube text-primary"></i> 
+                <span class="brand-text">SUMIRUS</span>
+            </div>
+            
+            <nav class="nav-menu">
+                <div class="nav-group">PRINCIPAL</div>
+                <div class="nav-item active">
+                    <i class="fa-solid fa-layer-group"></i> Quadro de Processos
+                </div>
+                <div class="nav-item disabled">
+                    <i class="fa-solid fa-chart-pie"></i> Dashboard
+                </div>
+                <div class="nav-item disabled">
+                    <i class="fa-regular fa-calendar"></i> Calendário
+                </div>
+                <div class="nav-item disabled">
+                    <i class="fa-solid fa-list-check"></i> Rotina Diária
+                </div>
+                
+                <div class="nav-item disabled">
+                    <i class="fa-regular fa-lightbulb"></i> Quadro de Ideias
+                </div>
+                
+                <div class="nav-group">ORGANIZAÇÃO</div>
+                <div class="nav-item disabled">
+                    <i class="fa-solid fa-users"></i> Clientes CRM
+                </div>
+            </nav>
+
+            <div class="system-footer">
+                <div id="system-clock">00:00:00</div>
+                <div class="status-dot online">ONLINE</div>
+            </div>
+        </aside>
+        
+        <main class="workspace">
+            <header class="top-bar">
+                <h2 class="page-title">Fluxo de Trabalho</h2>
+                
+                <div class="search-engine">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="global-search" placeholder="Buscar Samengo, ID, Pedido...">
+                </div>
+
+                <div class="actions">
+                    <button id="open-modal-btn" class="btn-neon">
+                        <i class="fa-solid fa-plus"></i> NOVA DEMANDA
+                    </button>
+                    
+                    <div class="user-container" style="position: relative;">
+                        <div class="user-profile" id="btn-user-menu">
+                            <i class="fa-solid fa-circle-user"></i>
+                        </div>
+                        
+                        <div id="user-dropdown" class="dropdown-menu">
+                            <div class="dropdown-item" id="btn-backup-download">
+                                <i class="fa-solid fa-download"></i> Backup Dados
+                            </div>
+                            <div class="dropdown-item" id="btn-backup-restore">
+                                <i class="fa-solid fa-upload"></i> Restaurar Backup
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-item danger" id="btn-logout">
+                                <i class="fa-solid fa-power-off"></i> Logout
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <input type="file" id="input-restore-backup" accept=".json" style="display: none;">
+
+            <div id="kanban-container" class="module-container"></div>
+        </main>
+    </div>
+
+    <div id="task-modal" class="modal-overlay">
+        <div class="modal-box-pro">
+            
+            <div class="modal-header-pro" id="modal-header-bg">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div class="badge-header">DEMANDA LOGÍSTICA</div>
+                    <i class="fa-solid fa-xmark close-modal" id="btn-close-x" style="cursor:pointer; font-size: 1.2rem; color: #fff;"></i>
+                </div>
+                <input type="text" id="input-title" class="title-input-pro" placeholder="Título da Demanda...">
+            </div>
+
+            <div class="modal-body-pro">
+                
+                <div class="main-column">
+                    <label class="label-pro"><i class="fa-solid fa-bars-progress"></i> STATUS DA DEMANDA</label>
+                    <div class="status-stepper" id="status-stepper">
+                        <div class="step-item active" data-value="entrada">Entrada</div>
+                        <div class="step-item" data-value="producao">Produção</div>
+                        <div class="step-item" data-value="analise">Análise</div>
+                        <div class="step-item" data-value="pronto">Pronto</div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                        <div>
+                            <label class="label-pro"><i class="fa-solid fa-building"></i> CLIENTE / PARCEIRO</label>
+                            <select id="input-client" class="input-pro">
+                                <option value="">Carregando...</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="label-pro"><i class="fa-solid fa-user-astronaut"></i> RESPONSÁVEL</label>
+                            <select id="input-assignee" class="input-pro">
+                                <option value="Sem Dono">Definir depois...</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <label class="label-pro" style="margin-top:20px;"><i class="fa-solid fa-align-left"></i> DESCRIÇÃO COMPLETA</label>
+                    <textarea id="input-desc" class="textarea-pro" placeholder="Detalhes, itens, observações..."></textarea>
+
+                    <label class="label-pro" style="margin-top:20px;"><i class="fa-solid fa-camera"></i> FOTOS & EVIDÊNCIAS</label>
+                    <div class="upload-area-mock" id="btn-trigger-upload">
+                        <i class="fa-solid fa-plus"></i> Adicionar Foto / Print
+                    </div>
+                    <input type="file" id="hidden-file-input" accept="image/*" style="display: none;">
+                    <div id="evidence-gallery" class="evidence-grid"></div>
+                </div>
+
+                <div class="side-column">
+                    <div class="side-panel">
+                        <label class="label-pro">PROGRAMAÇÃO</label>
+                        <div class="side-field">
+                            <span>Data Entrega</span>
+                            <input type="date" id="input-date" class="input-side">
+                        </div>
+                        <div class="side-field">
+                            <span>Valor (R$)</span>
+                            <input type="number" id="input-value" class="input-side" placeholder="0.00">
+                        </div>
+                    </div>
+
+                    <div class="side-panel">
+                        <label class="label-pro">HISTÓRICO / LOG</label>
+                        <div class="history-log" style="font-size: 0.75rem; color: #888; max-height: 150px; overflow-y: auto;"></div>
+                    </div>
+
+                    <button id="btn-save" class="btn-save-pro">
+                        <i class="fa-solid fa-check"></i> SALVAR
+                    </button>
+                    
+                    <button id="btn-delete-task" class="btn-delete-link" style="display:none; width: 100%; margin-top: 10px;">
+                        Excluir Demanda
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="project-modal" class="modal-overlay" style="z-index: 10000;">
+        <div class="login-box" style="width: 400px; text-align: left;">
+            <h3 style="color:var(--color-primary); margin-bottom:15px; font-family:'Rajdhani'">NOVO PROJETO / META</h3>
+            
+            <label style="font-size:0.8rem; color:#888;">Nome do Projeto</label>
+            <input type="text" id="proj-title" class="input-pro" placeholder="Ex: Frota Elétrica 2026" style="margin-bottom:15px;">
+            
+            <label style="font-size:0.8rem; color:#888;">Progresso Atual (%)</label>
+            <input type="number" id="proj-progress" class="input-pro" placeholder="0 a 100" max="100" style="margin-bottom:15px;">
+            
+            <label style="font-size:0.8rem; color:#888;">Prazo Final</label>
+            <input type="date" id="proj-deadline" class="input-pro" style="margin-bottom:20px;">
+
+            <div style="display:flex; gap:10px;">
+                <button id="btn-cancel-proj" class="btn-neon" style="flex:1; border-color:#444; color:#ccc;">CANCELAR</button>
+                <button id="btn-confirm-proj" class="btn-neon" style="flex:1;">CRIAR</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="context-menu" class="context-menu">
+        <div class="context-item" id="ctx-edit">
+            <i class="fa-solid fa-pen"></i> Editar
+        </div>
+        <div class="context-item danger" id="ctx-delete">
+            <i class="fa-solid fa-trash"></i> Excluir
+        </div>
+    </div>
+
+    <script type="module" src="./js/main.js"></script>
+</body>
+</html>

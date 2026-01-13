@@ -1,0 +1,344 @@
+/* =========================================
+   1. ESTRUTURA DO QUADRO KANBAN
+   ========================================= */
+
+.kanban-board {
+    display: flex;
+    gap: 20px;
+    height: 100%;
+    overflow-x: auto; /* Rolagem horizontal se tiver muitas colunas */
+    align-items: flex-start;
+    padding-bottom: 10px;
+}
+
+/* Coluna Individual */
+.kanban-column {
+    min-width: 320px;
+    max-width: 320px;
+    background: rgba(21, 26, 35, 0.7); /* Fundo escuro translúcido */
+    border: 1px solid #333;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-height: 100%;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+.kanban-column:hover {
+    border-color: #444;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+/* Cabeçalho da Coluna */
+.column-header {
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.02);
+    border-bottom: 1px solid #333;
+    border-radius: 12px 12px 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+/* Título e Contador */
+.column-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    color: #fff;
+    font-family: var(--font-main);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+.column-count {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ccc;
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: var(--font-code);
+}
+
+/* Corpo da Coluna (Lista de Tarefas) */
+.column-body {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto; /* Scroll vertical */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Scrollbar Customizada */
+.column-body::-webkit-scrollbar { width: 6px; }
+.column-body::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
+.column-body::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
+.column-body::-webkit-scrollbar-thumb:hover { background: var(--color-primary); }
+
+
+/* =========================================
+   2. ESTILO DOS CARDS (TAREFAS)
+   ========================================= */
+
+.task-card {
+    background: #151a23;
+    border: 1px solid #2a3441;
+    border-left-width: 4px; /* Cor do cliente entra aqui */
+    border-radius: 8px;
+    padding: 15px;
+    cursor: grab;
+    position: relative;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    animation: slideUp 0.3s ease forwards;
+}
+
+.task-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.4);
+    border-color: #475569;
+    z-index: 10;
+}
+
+.task-card:active {
+    cursor: grabbing;
+    transform: scale(0.98);
+}
+
+/* Header do Card: ID e Data */
+.task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-code);
+    font-size: 0.7rem;
+    color: #64748b;
+}
+
+/* Título Principal */
+.task-title {
+    color: #e0e6ed;
+    font-weight: 700;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    word-wrap: break-word;
+}
+
+/* Rodapé do Card */
+.task-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.task-tags span {
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.task-value {
+    font-family: var(--font-code);
+    font-weight: 700;
+    color: #fff;
+    font-size: 0.85rem;
+}
+
+/* Botão de Impressão */
+.btn-print-manifest {
+    transition: 0.2s; opacity: 0.7;
+}
+.btn-print-manifest:hover {
+    opacity: 1; transform: scale(1.2); text-shadow: 0 0 10px var(--color-primary);
+}
+
+
+/* =========================================
+   3. ESTILO DO MODAL (EDITE / NOVO)
+   ========================================= */
+
+/* Fundo do Modal */
+.modal-box-pro {
+    background-color: #151a23 !important; 
+    border: 1px solid var(--color-border);
+    width: 900px;
+    max-width: 95vw;
+    height: 85vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 50px rgba(0,0,0,0.8);
+    border-radius: 12px;
+    overflow: hidden;
+    color: #fff !important;
+}
+
+/* Cabeçalho do Modal */
+.modal-header-pro {
+    background: linear-gradient(90deg, #0f172a, #1e293b) !important;
+    border-bottom: 1px solid var(--color-primary);
+    padding: 20px 30px;
+    flex-shrink: 0;
+}
+
+.badge-header { 
+    background: rgba(0, 240, 255, 0.1) !important; 
+    border: 1px solid var(--color-primary) !important;
+    color: var(--color-primary) !important;
+    padding: 4px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; letter-spacing: 1px; 
+}
+
+.title-input-pro {
+    background: transparent; border: none; border-bottom: 2px solid #444;
+    color: #fff !important; font-size: 1.6rem; font-weight: 700; width: 100%; margin-top: 10px; outline: none;
+    font-family: var(--font-main);
+}
+.title-input-pro::placeholder { color: #666; }
+
+/* Corpo do Modal */
+.modal-body-pro { 
+    display: flex; flex: 1; overflow: hidden; 
+    background-color: #0b0e14 !important; 
+}
+
+.main-column { 
+    flex: 2; padding: 30px; 
+    border-right: 1px solid var(--color-border); 
+    overflow-y: auto; 
+}
+
+.side-column { 
+    flex: 1; 
+    background: rgba(0,0,0,0.3) !important; 
+    padding: 30px; 
+    display: flex; flex-direction: column; gap: 20px; 
+    overflow-y: auto; 
+}
+
+/* Labels e Inputs */
+.label-pro { 
+    display: flex; align-items: center; gap: 8px; 
+    color: var(--color-primary); font-size: 0.75rem; font-weight: bold; 
+    margin-bottom: 10px; letter-spacing: 1px; text-transform: uppercase;
+}
+
+.input-pro, .textarea-pro {
+    width: 100%; 
+    background-color: #1e293b !important; 
+    border: 1px solid #334155;
+    color: #fff !important; 
+    padding: 12px; border-radius: 6px; outline: none; font-family: var(--font-main);
+}
+.textarea-pro { height: 120px; resize: none; }
+.input-pro:focus, .textarea-pro:focus { 
+    border-color: var(--color-primary); 
+    box-shadow: 0 0 10px rgba(0,240,255,0.1); 
+}
+
+/* =========================================
+   4. STEPPER (BARRA DE STATUS)
+   ========================================= */
+
+.status-stepper { 
+    display: flex; 
+    background-color: #0f172a !important; 
+    border-radius: 8px; padding: 6px; gap: 6px; 
+    border: 1px solid #333; margin-bottom: 20px;
+}
+
+.step-item {
+    flex: 1; text-align: center; padding: 10px; font-size: 0.8rem; color: #64748b;
+    cursor: pointer; border-radius: 6px; transition: 0.2s; font-weight: 600;
+}
+
+.step-item:hover { color: #fff; background: rgba(255,255,255,0.05); }
+
+.step-item.active { 
+    background: var(--color-primary) !important; 
+    color: #000 !important; font-weight: 800; 
+    box-shadow: 0 0 10px var(--color-primary);
+}
+
+/* =========================================
+   5. UPLOAD E EVIDÊNCIAS
+   ========================================= */
+
+.upload-area-mock {
+    border: 2px dashed #334155; padding: 25px; text-align: center; color: #64748b;
+    border-radius: 8px; cursor: pointer; transition: 0.2s; background: rgba(0,0,0,0.2);
+}
+.upload-area-mock:hover { 
+    border-color: var(--color-primary); color: var(--color-primary); background: rgba(0,240,255,0.05); 
+}
+
+.evidence-grid { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
+
+.evidence-thumb {
+    width: 70px; height: 70px; border-radius: 8px; background-size: cover;
+    background-position: center; border: 1px solid #444; 
+    cursor: pointer; transition: 0.2s; position: relative;
+}
+.evidence-thumb:hover { transform: scale(1.1); border-color: var(--color-primary); z-index: 10; }
+
+.evidence-thumb::after {
+    content: '×'; position: absolute; top: -5px; right: -5px;
+    background: var(--color-accent); color: white; width: 18px; height: 18px; 
+    border-radius: 50%; font-size: 10px; display: flex; align-items: center; 
+    justify-content: center; opacity: 0;
+}
+.evidence-thumb:hover::after { opacity: 1; }
+
+/* =========================================
+   6. SIDEBAR DO MODAL E BOTÕES
+   ========================================= */
+
+.side-panel { 
+    background: rgba(255,255,255,0.03) !important; 
+    padding: 15px; border-radius: 8px; 
+    border: 1px solid rgba(255,255,255,0.05); 
+    margin-bottom: 20px;
+}
+
+.side-field { 
+    display: flex; justify-content: space-between; align-items: center; 
+    margin-bottom: 10px; font-size: 0.9rem; color: #ccc; 
+}
+
+.input-side {
+    background-color: #0b0e14 !important; 
+    border: 1px solid #333; color: #fff !important; width: 120px; padding: 6px;
+    text-align: right; border-radius: 4px; outline: none;
+}
+
+.btn-save-pro {
+    background: linear-gradient(90deg, var(--color-primary), #0099ff) !important;
+    color: #000 !important; border: none; width: 100%; padding: 15px;
+    font-weight: 800; cursor: pointer; border-radius: 8px; 
+    transition: 0.2s; letter-spacing: 1px; font-family: var(--font-main);
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.btn-save-pro:hover { filter: brightness(1.2); transform: translateY(-2px); }
+
+.btn-delete-link {
+    background: none; border: none; color: #666; cursor: pointer; font-size: 0.8rem;
+    text-decoration: underline; transition: 0.2s; width: 100%; text-align: center;
+}
+.btn-delete-link:hover { color: var(--color-accent); }
+
+/* Animação */
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
