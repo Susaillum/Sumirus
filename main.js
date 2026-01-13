@@ -7,7 +7,7 @@ import { ClientController } from './ClientController.js';
 import { CalendarController } from './CalendarController.js';
 import { RoutineController } from './RoutineController.js';
 import { IdeasController } from './IdeasController.js'; 
-import { LogisticsService } from './LogisticsService.js'; // Adicionei caso precise
+// import { LogisticsService } from './LogisticsService.js'; // REMOVIDO PARA NÃO TRAVAR
 
 class SumirusApp {
     constructor() {
@@ -130,7 +130,7 @@ class SumirusApp {
                 else if(text.includes('clientes') || text.includes('crm')) this.loadModule('crm');
                 else if(text.includes('calendário')) this.loadModule('calendar');
                 else if(text.includes('rotina')) this.loadModule('routine');
-                else if(text.includes('ideias') || text.includes('insights')) this.loadModule('ideas'); // [NOVO] Rota
+                else if(text.includes('ideias') || text.includes('insights')) this.loadModule('ideas');
             });
         });
     }
@@ -180,7 +180,7 @@ class SumirusApp {
                 this.activeModule = new RoutineController();
                 if(actionsDiv) actionsDiv.style.display = 'none';
                 break;
-            case 'ideas': // [NOVO] Carregamento do Módulo
+            case 'ideas':
                 this.updateTitle('Quadro de Ideias & Insights');
                 this.activeModule = new IdeasController();
                 if(actionsDiv) actionsDiv.style.display = 'none';
