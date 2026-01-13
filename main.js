@@ -1,11 +1,13 @@
-import { bus } from './core/EventBus.js';
-import { db } from './core/Store.js'; 
-import { KanbanController } from './modules/Kanban/KanbanController.js';
-import { DashboardController } from './modules/Dashboard/DashboardController.js';
-import { ClientController } from './modules/Clients/ClientController.js';
-import { CalendarController } from './modules/Calendar/CalendarController.js';
-import { RoutineController } from './modules/Routine/RoutineController.js';
-import { IdeasController } from './modules/Ideas/IdeasController.js'; // [NOVO] Importação
+// --- IMPORTAÇÕES CORRIGIDAS (TUDO NA RAIZ) ---
+import { bus } from './EventBus.js';
+import { db } from './Store.js'; 
+import { KanbanController } from './KanbanController.js';
+import { DashboardController } from './DashboardController.js';
+import { ClientController } from './ClientController.js';
+import { CalendarController } from './CalendarController.js';
+import { RoutineController } from './RoutineController.js';
+import { IdeasController } from './IdeasController.js'; 
+import { LogisticsService } from './LogisticsService.js'; // Adicionei caso precise
 
 class SumirusApp {
     constructor() {
