@@ -180,7 +180,7 @@ class SumirusApp {
                 this.activeModule = new RoutineController();
                 if(actionsDiv) actionsDiv.style.display = 'none';
                 break;
-            case 'ideas':
+            case 'ideas': 
                 this.updateTitle('Quadro de Ideias & Insights');
                 this.activeModule = new IdeasController();
                 if(actionsDiv) actionsDiv.style.display = 'none';
@@ -333,35 +333,39 @@ class SumirusApp {
             };
         }
 
-        // Salvar Demanda (LÓGICA PRINCIPAL)
+        // Salvar Demanda (LÓGICA PRINCIPAL CORRIGIDA)
         const btnSave = document.getElementById('btn-save');
         if(btnSave) {
             const newSave = btnSave.cloneNode(true);
             btnSave.parentNode.replaceChild(newSave, btnSave);
             newSave.addEventListener('click', () => {
+                // 1. Captura Cliente
                 const selectEl = document.getElementById('input-client');
-                const clientVal = selectEl.value || '';
+                const clientVal = selectEl ? selectEl.value : '';
+                
+                // 2. Captura Título
                 const titleVal = document.getElementById('input-title').value;
-
                 if(!titleVal) return this.notify('O título é obrigatório!', 'warning');
                 
+                // 3. Captura Status
                 const activeStep = document.querySelector('.step-item.active');
                 const statusVal = activeStep ? activeStep.getAttribute('data-value') : 'entrada';
 
-                // Coleta imagens
+                // 4. Captura Imagens
                 const evidences = [];
                 document.querySelectorAll('.evidence-thumb').forEach(thumb => {
                     evidences.push(thumb.dataset.content);
                 });
 
-                // Coleta Responsável
-                const assigneeVal = document.getElementById('input-assignee') ? document.getElementById('input-assignee').value : 'Sem Dono';
+                // 5. Captura Responsável (CORREÇÃO DE BINDING)
+                const selectAssignee = document.getElementById('input-assignee');
+                const assigneeVal = selectAssignee && selectAssignee.value ? selectAssignee.value : 'Sem Dono';
 
                 const data = {
                     id: this.isEditingId,
                     titulo: titleVal,
                     cliente: clientVal,
-                    assignee: assigneeVal, // Salva o responsável
+                    assignee: assigneeVal, // Valor capturado corretamente
                     valor: document.getElementById('input-value').value,
                     dueDate: document.getElementById('input-date').value,
                     description: document.getElementById('input-desc').value,
@@ -407,7 +411,9 @@ class SumirusApp {
         const gallery = document.getElementById('evidence-gallery');
         if(gallery) gallery.innerHTML = ''; 
         
-        this.populateSelects(); // Preenche Clientes e Equipe
+        // 1. POPULA OS SELECTS ANTES DE TENTAR DEFINIR VALORES
+        this.populateSelects(); 
+        
         document.querySelectorAll('.step-item').forEach(s => s.classList.remove('active'));
 
         if (dados) {
@@ -422,7 +428,7 @@ class SumirusApp {
             const selectEl = document.getElementById('input-client');
             if(selectEl && dados.client) selectEl.value = dados.client;
 
-            // Define Responsável
+            // Define Responsável (CORREÇÃO)
             const selectAssignee = document.getElementById('input-assignee');
             if(selectAssignee) selectAssignee.value = dados.assignee || 'Sem Dono';
 
@@ -477,6 +483,7 @@ class SumirusApp {
             const selectEl = document.getElementById('input-client');
             if(selectEl) selectEl.value = "";
 
+            // Reset Responsável (CORREÇÃO)
             const selectAssignee = document.getElementById('input-assignee');
             if(selectAssignee) selectAssignee.value = "Sem Dono";
             
