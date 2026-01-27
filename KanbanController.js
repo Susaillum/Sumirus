@@ -27,6 +27,7 @@ export class KanbanController {
         this.setupPrint(); // <--- Impressão Ativada
 
         // 4. Sistema de Eventos (Salvar)
+        // Limpa ouvintes antigos para evitar duplicação
         bus.listeners['kanban:save-demand'] = []; 
         bus.subscribe('kanban:save-demand', (dados) => this.handleSaveDemand(dados));
 
@@ -132,7 +133,7 @@ export class KanbanController {
         const currentUser = db.state.currentUser ? db.state.currentUser.name : 'Operador';
 
         if (dados.id) {
-            // Edição
+            // --- ATUALIZAR TAREFA EXISTENTE ---
             const idx = db.state.tasks.findIndex(t => t.id == dados.id);
             if (idx !== -1) {
                 const old = db.state.tasks[idx];
@@ -146,6 +147,7 @@ export class KanbanController {
                     ...old, 
                     title: dados.titulo, 
                     client: dados.cliente, 
+                    assignee: dados.assignee, // <--- CAMPO RESPONSÁVEL
                     value: parseFloat(dados.valor) || 0, 
                     dueDate: dados.dueDate, 
                     description: dados.description, 
@@ -154,10 +156,11 @@ export class KanbanController {
                 };
             }
         } else {
-            // Criação
+            // --- CRIAR NOVA TAREFA ---
             db.addTask({
                 title: dados.titulo, 
                 client: dados.cliente || 'INTERNO', 
+                assignee: dados.assignee || 'Sem Dono', // <--- CAMPO RESPONSÁVEL
                 value: parseFloat(dados.valor) || 0,
                 dueDate: dados.dueDate, 
                 description: dados.description, 
