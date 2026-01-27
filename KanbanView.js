@@ -120,6 +120,10 @@ export class KanbanView {
         // Formata Data
         const dateLabel = task.dueDate ? this.formatDate(task.dueDate) : 'Sem Data';
 
+        // --- NOVO: Visualização do Responsável ---
+        const resp = task.assignee || 'Sem Dono';
+        const respHtml = resp !== 'Sem Dono' ? `<span style="font-size:0.65rem; color:#888; margin-top:2px;"><i class="fa-solid fa-user"></i> ${resp}</span>` : '';
+
         // Retorna o HTML do Card
         return `
             <div class="task-card" draggable="true" data-id="${task.id}" style="border-left-color: ${style.color}">
@@ -139,7 +143,10 @@ export class KanbanView {
                             ${task.client || 'Sem Cliente'}
                         </span>
                     </div>
-                    <div class="task-value">${value}</div>
+                    <div style="display:flex; flex-direction:column; align-items:flex-end;">
+                        <div class="task-value">${value}</div>
+                        ${respHtml}
+                    </div>
                 </div>
             </div>
         `;
